@@ -1,0 +1,36 @@
+type CreateUserReq {
+	Username string `json:"username"`           // 用户名
+	NickName string `json:"nickname,omitempty"` // 用户别名
+	Password string `json:"password"`           // 密码
+	Roles    uint   `json:"roles"`              // 用户角色列表
+}
+
+type CreateUserResp {
+	Message string `json:"message"`
+}
+
+service server-api {
+	@handler CreateUserHandler
+	post /user (CreateUserReq) returns (CreateUserResp)
+}
+
+type GetUserReq {
+	Username string `path:"username"` // 用户名
+}
+
+type GetUserResp {
+	UUID      string `json:"uuid"`               // 用户uuid
+	Username  string `json:"username"`           // 用户名
+	NickName  string `json:"nickname,omitempty"` // 用户别名
+	Password  string `json:"password"`           // 密码
+	Roles     uint   `json:"rolse"`              // 用户角色列表
+	LockAt    string `json:"lockat,omitempty"`   // 用户锁定时间
+	ID        uint   `json:"id"`
+	CreatedAt string `json:"createdAt"`
+	UpdatedAt string `json:"updatedAt"`
+}
+
+service server-api {
+	@handler GetUserHandler
+	get /user/:username (GetUserReq) returns (GetUserResp)
+}
