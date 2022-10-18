@@ -1,8 +1,8 @@
 type CreateUserReq {
-	Username string `json:"username"`           // 用户名
-	NickName string `json:"nickname,omitempty"` // 用户别名
-	Password string `json:"password"`           // 密码
-	Roles    uint   `json:"roles"`              // 用户角色列表
+	Username string `json:"username"`          // 用户名
+	NickName string `json:"nickname,optional"` // 用户别名
+	Password string `json:"password"`          // 密码
+	Roles    string `json:"roles"`             // 用户角色列表
 }
 
 type CreateUserResp {
@@ -15,22 +15,53 @@ service server-api {
 }
 
 type GetUserReq {
-	Username string `path:"username"` // 用户名
+	Username string `json:"username,optional"` // 用户名
+	UUID     string `json:"uuid,optional"`     // 用户uuid
 }
 
 type GetUserResp {
-	UUID      string `json:"uuid"`               // 用户uuid
-	Username  string `json:"username"`           // 用户名
-	NickName  string `json:"nickname,omitempty"` // 用户别名
-	Password  string `json:"password"`           // 密码
-	Roles     uint   `json:"rolse"`              // 用户角色列表
-	LockAt    string `json:"lockat,omitempty"`   // 用户锁定时间
-	ID        uint   `json:"id"`
-	CreatedAt string `json:"createdAt"`
-	UpdatedAt string `json:"updatedAt"`
+	UUID      string `json:"uuid"`              // 用户uuid
+	Username  string `json:"username"`          // 用户名
+	NickName  string `json:"nickname,optional"` // 用户别名
+	Roles     string `json:"rolse"`             // 用户角色列表
+	LockAt    string `json:"lockat,optional"`   // 用户锁定时间
+	CreatedAt int64 `json:"createdAt"`
+	UpdatedAt int64 `json:"updatedAt"`
 }
 
 service server-api {
 	@handler GetUserHandler
-	get /user/:username (GetUserReq) returns (GetUserResp)
+	get /user (GetUserReq) returns (GetUserResp)
+}
+
+type (
+	DeleteUserReq {
+		UUID     string `json:"uuid"`     // 用户uuid
+		Username string `json:"username"` // 用户名
+	}
+
+	DeleteUserResp {
+		Message string `json:"message"`
+	}
+)
+
+service server-api {
+	@handler DeleteUserHandler
+	delete  /user (DeleteUserReq) returns (DeleteUserResp)
+}
+
+type (
+	LoginReq {
+		Username string `json:"username"` //用户名
+		Password string `json:"password"` //密码
+	}
+
+	LoginResq {
+		Token string `json:"token"` // token
+	}
+)
+
+service server-api {
+	@handler LoginHandler
+	post /login (LoginReq) returns (LoginResq)
 }

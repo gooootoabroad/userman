@@ -19,15 +19,16 @@ var configFile = flag.String("f", "etc/server-api.yaml", "the config file")
 func main() {
 	flag.Parse()
 
-	var c config.Config
-	conf.MustLoad(*configFile, &c)
+	// 初始化配置文件
+	c := config.GetConfig()
+	conf.MustLoad(*configFile, c)
 
 	// init db
 	global.DB = initialize.InitDB(c.PGSQL)
 	server := rest.MustNewServer(c.RestConf)
 	defer server.Stop()
 
-	ctx := svc.NewServiceContext(c)
+	ctx := svc.NewServiceContext(*c)
 	handler.RegisterHandlers(server, ctx)
 
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)
