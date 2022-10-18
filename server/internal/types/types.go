@@ -2,10 +2,10 @@
 package types
 
 type CreateUserReq struct {
-	Username string `json:"username"`           // 用户名
-	NickName string `json:"nickname,omitempty"` // 用户别名
-	Password string `json:"password"`           // 密码
-	Roles    uint   `json:"roles"`              // 用户角色列表
+	Username string `json:"username"`          // 用户名
+	NickName string `json:"nickname,optional"` // 用户别名
+	Password string `json:"password"`          // 密码
+	Roles    string `json:"roles"`             // 用户角色列表
 }
 
 type CreateUserResp struct {
@@ -13,17 +13,26 @@ type CreateUserResp struct {
 }
 
 type GetUserReq struct {
-	Username string `path:"username"` // 用户名
+	Username string `form:"username,optional"` // 用户名
+	UUID     string `form:"uuid,optional"`     // 用户uuid
 }
 
 type GetUserResp struct {
-	UUID      string `json:"uuid"`               // 用户uuid
-	Username  string `json:"username"`           // 用户名
-	NickName  string `json:"nickname,omitempty"` // 用户别名
-	Password  string `json:"password"`           // 密码
-	Roles     uint   `json:"rolse"`              // 用户角色列表
-	LockAt    string `json:"lockat,omitempty"`   // 用户锁定时间
-	ID        uint   `json:"id"`
+	UUID      string `json:"uuid"`              // 用户uuid
+	Username  string `json:"username"`          // 用户名
+	NickName  string `json:"nickname,optional"` // 用户别名
+	Password  string `json:"password"`          // 密码
+	Roles     string `json:"rolse"`             // 用户角色列表
+	LockAt    string `json:"lockat,optional"`   // 用户锁定时间
 	CreatedAt string `json:"createdAt"`
 	UpdatedAt string `json:"updatedAt"`
+}
+
+type DeleteUserReq struct {
+	UUID     string `json:"uuid"`     // 用户uuid
+	Username string `json:"username"` // 用户名
+}
+
+type DeleteUserResp struct {
+	Message string `json:"message"`
 }

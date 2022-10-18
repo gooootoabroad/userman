@@ -4,12 +4,11 @@ import (
 	"context"
 	"fmt"
 
-	"userman/server/global"
 	"userman/server/internal/svc"
 	"userman/server/internal/types"
 	"userman/server/model"
+	"userman/server/utils"
 
-	"github.com/google/uuid"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -29,36 +28,31 @@ func NewCreateUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Create
 
 func (l *CreateUserLogic) CreateUser(req *types.CreateUserReq) (resp *types.CreateUserResp, err error) {
 	// todo: add your logic here and delete this line
-	logx.Infof("req %v", req)
-	username := req.Username
-	// 判断是否已经存在username了
-	userInfo := model.UserInfo{}
-	global.DB.Where("Username = ?", username).First(&userInfo)
-	if userInfo.Username != "" {
-		return nil, fmt.Errorf("username %s exist", username)
+	// 检查角色是否正确
+	var role model.Role
+	role, err = role.ToRole(req.Roles)
+	if err != nil {
+		l.Errorf("check user %s role %s failed, err: %s", req.Username, req.Roles, err)
+		return nil, fmt.Errorf("user role is illegal")
 	}
 
-	if req.NickName != "" {
-		// 有别名，检查别名
-		global.DB.Where("NickName = ?", req.NickName).First(&userInfo)
-		if userInfo.Username != "" {
-			return nil, fmt.Errorf("nickname %s exist", req.NickName)
-		}
-	}
-
-	// todo权限检查
-
-	// 创建用户，记录到数据库中
-	userInfo = model.UserInfo{
-		UUID:     uuid.New(),
+	user := model.UserInfo{
 		Username: req.Username,
 		NickName: req.NickName,
 		Password: req.Password,
-		Roles:    req.Roles,
+		Roles:    role,
 	}
 
-	global.DB.Create(userInfo)
-	return &types.CreateUserResp{
-		Message: "good",
-	}, nil
+	l.Infof("start create user %s", req.Username)
+	err = utils.CreateUser(l.ctx, user)
+	if err != nil {
+		return nil, err
+	}
+
+	msg := fmt.Sprintf("create user %s successed", req.Username)
+	resp = &types.CreateUserResp{
+		Message: msg,
+	}
+
+	return resp, nil
 }
