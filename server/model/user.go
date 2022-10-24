@@ -20,6 +20,9 @@ var (
 	security  Role = 3
 )
 
+// 拼接密码所用的分隔符
+var Separator = "."
+
 // 错误信息
 var (
 	UserExist     = errors.New("username or nick name is alerady exist")

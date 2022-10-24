@@ -13,15 +13,14 @@ type CreateUserResp struct {
 }
 
 type GetUserReq struct {
-	Username string `form:"username,optional"` // 用户名
-	UUID     string `form:"uuid,optional"`     // 用户uuid
+	Username string `json:"username,optional"` // 用户名
+	UUID     string `json:"uuid,optional"`     // 用户uuid
 }
 
 type GetUserResp struct {
 	UUID      string `json:"uuid"`              // 用户uuid
 	Username  string `json:"username"`          // 用户名
 	NickName  string `json:"nickname,optional"` // 用户别名
-	Password  string `json:"password"`          // 密码
 	Roles     string `json:"rolse"`             // 用户角色列表
 	LockAt    string `json:"lockat,optional"`   // 用户锁定时间
 	CreatedAt string `json:"createdAt"`
@@ -35,4 +34,13 @@ type DeleteUserReq struct {
 
 type DeleteUserResp struct {
 	Message string `json:"message"`
+}
+
+type LoginReq struct {
+	Username string `json:"username"` //用户名
+	Password string `json:"password"` //密码
+}
+
+type LoginResq struct {
+	Token string `json:"token"` // token
 }

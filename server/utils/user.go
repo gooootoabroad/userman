@@ -2,9 +2,13 @@ package utils
 
 import (
 	"context"
+	"crypto/sha256"
 	"fmt"
+	"math/rand"
+	"strconv"
 	"strings"
 	"sync"
+	"time"
 	"userman/server/global"
 	"userman/server/model"
 
@@ -81,6 +85,9 @@ func CreateUser(ctx context.Context, user model.UserInfo) error {
 		user.UUID = uuid.New()
 	}
 
+	// 对密码进行加密处理
+	user.Password = EncryptPWD(user.Password)
+
 	err = global.DB.Create(&user).Error
 	if err != nil {
 		logger.Errorf("create user %s failed from db, err %s", username, err)
@@ -153,4 +160,20 @@ func DeleteUser(ctx context.Context, username string, userUUID uuid.UUID) error 
 	}
 
 	return nil
+}
+
+func EncryptPWD(password string) string {
+	// 1. 生成随机数s
+	rand.Seed(time.Now().Unix())
+	srand := strconv.Itoa(rand.Intn(999899) + 100)
+
+	// 2. 将随机数与密码拼接后进行hash
+	spwd := srand + password
+	// 3. hash256
+	hashpwd := sha256.Sum256([]byte(spwd))
+	// 将数组转出slice，以便转成字符串保存到数据库中
+	slice := hashpwd[:]
+	sliceString := fmt.Sprintf("%x", string(slice))
+	encryptPwd := "sha256" + model.Separator + srand + model.Separator + sliceString
+	return encryptPwd
 }

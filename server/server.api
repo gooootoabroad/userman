@@ -15,19 +15,18 @@ service server-api {
 }
 
 type GetUserReq {
-	Username string `form:"username,optional"` // 用户名
-	UUID     string `form:"uuid,optional"`     // 用户uuid
+	Username string `json:"username,optional"` // 用户名
+	UUID     string `json:"uuid,optional"`     // 用户uuid
 }
 
 type GetUserResp {
 	UUID      string `json:"uuid"`              // 用户uuid
 	Username  string `json:"username"`          // 用户名
 	NickName  string `json:"nickname,optional"` // 用户别名
-	Password  string `json:"password"`          // 密码
 	Roles     string `json:"rolse"`             // 用户角色列表
 	LockAt    string `json:"lockat,optional"`   // 用户锁定时间
-	CreatedAt string `json:"createdAt"`
-	UpdatedAt string `json:"updatedAt"`
+	CreatedAt int64 `json:"createdAt"`
+	UpdatedAt int64 `json:"updatedAt"`
 }
 
 service server-api {
@@ -49,4 +48,20 @@ type (
 service server-api {
 	@handler DeleteUserHandler
 	delete  /user (DeleteUserReq) returns (DeleteUserResp)
+}
+
+type (
+	LoginReq {
+		Username string `json:"username"` //用户名
+		Password string `json:"password"` //密码
+	}
+
+	LoginResq {
+		Token string `json:"token"` // token
+	}
+)
+
+service server-api {
+	@handler LoginHandler
+	post /login (LoginReq) returns (LoginResq)
 }

@@ -2,3 +2,9 @@ Name: server-api
 Host: 0.0.0.0
 Port: 8888
 DNS: "host=localhost user=postgres password=peng@123 dbname=testdb port=5432 sslmode=disable TimeZone=Asia/Shanghai"
+
+PublicKeyFile: "etc/public.key"
+PrivateKeyFile: "etc/private.key"
+
+WhiteList:
+  - URL: "login"

@@ -1,10 +1,21 @@
 package model
 
-import "github.com/google/uuid"
+import (
+	"time"
 
-type JWTInfo struct {
+	"github.com/golang-jwt/jwt/v4"
+	"github.com/google/uuid"
+)
+
+var (
+	ExpiresTime = int64(time.Minute * 5)
+	Issuer      = "userman"
+	Sign        = []byte("qgqegdbdtpgeg")
+)
+
+type Claims struct {
 	UUID     uuid.UUID `json:"uuid"`     // 用户uuid
-	ID       uint      `json:"id"`       // 数据库主键
-	Username string    `json:"username"` //用户名
-	Roles    uint      `json:"roles"`    // 用户角色列表
+	Username string    `json:"username"` // 用户名
+	Roles    string    `json:"roles"`    // 用户角色列表
+	jwt.StandardClaims
 }
