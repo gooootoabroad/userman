@@ -8,9 +8,9 @@ import (
 	"userman/server/initialize"
 	"userman/server/internal/config"
 	"userman/server/internal/handler"
+	"userman/server/internal/middleware"
 	"userman/server/internal/svc"
 
-	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"
 )
 
@@ -20,15 +20,15 @@ func main() {
 	flag.Parse()
 
 	// 初始化配置文件
-	c := config.GetConfig()
-	conf.MustLoad(*configFile, c)
+	c := config.InitWithFatal(*configFile)
 
 	// init db
 	global.DB = initialize.InitDB(c.PGSQL)
 	server := rest.MustNewServer(c.RestConf)
 	defer server.Stop()
+	server.Use(middleware.Auth)
 
-	ctx := svc.NewServiceContext(*c)
+	ctx := svc.NewServiceContext(c)
 	handler.RegisterHandlers(server, ctx)
 
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)

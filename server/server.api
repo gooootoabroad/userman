@@ -1,51 +1,60 @@
-type CreateUserReq {
-	Username string `json:"username"`          // 用户名
-	NickName string `json:"nickname,optional"` // 用户别名
-	Password string `json:"password"`          // 密码
-	Roles    string `json:"roles"`             // 用户角色列表
-}
-
-type CreateUserResp {
-	Message string `json:"message"`
-}
-
-service server-api {
-	@handler CreateUserHandler
-	post /user (CreateUserReq) returns (CreateUserResp)
-}
-
-type GetUserReq {
-	Username string `json:"username,optional"` // 用户名
-	UUID     string `json:"uuid,optional"`     // 用户uuid
-}
-
-type GetUserResp {
-	UUID      string `json:"uuid"`              // 用户uuid
-	Username  string `json:"username"`          // 用户名
-	NickName  string `json:"nickname,optional"` // 用户别名
-	Roles     string `json:"rolse"`             // 用户角色列表
-	LockAt    string `json:"lockat,optional"`   // 用户锁定时间
-	CreatedAt int64 `json:"createdAt"`
-	UpdatedAt int64 `json:"updatedAt"`
-}
-
-service server-api {
-	@handler GetUserHandler
-	get /user (GetUserReq) returns (GetUserResp)
-}
-
 type (
+	CreateUserReq {
+		Username string `json:"username"`          // 用户名
+		NickName string `json:"nickname,optional"` // 用户别名
+		Password string `json:"password"`          // 密码
+		Roles    string `json:"roles"`             // 用户角色列表
+	}
+
+	CreateUserResp {
+		Code    int    `json:"code"`
+		Message string `json:"message"`
+		Data    string `json:"data"`
+	}
+
+	GetUserReq {
+		Username string `json:"username,optional"` // 用户名
+		UUID     string `json:"uuid,optional"`     // 用户uuid
+	}
+
+	UserInfo {
+		UUID      string `json:"uuid"`              // 用户uuid
+		Username  string `json:"username"`          // 用户名
+		NickName  string `json:"nickname,optional"` // 用户别名
+		Roles     string `json:"rolse"`             // 用户角色列表
+		LockAt    string `json:"lockat,optional"`   // 用户锁定时间
+		CreatedAt int64  `json:"createdAt"`
+		UpdatedAt int64  `json:"updatedAt"`
+	}
+
+	GetUserResp {
+		Code    int        `json:"code"`
+		Message string     `json:"message"`
+		Data    []UserInfo `json:"data"`
+	}
+
 	DeleteUserReq {
 		UUID     string `json:"uuid"`     // 用户uuid
 		Username string `json:"username"` // 用户名
 	}
 
 	DeleteUserResp {
+		Code    int    `json:"code"`
 		Message string `json:"message"`
+		Data    string `json:"data"`
 	}
 )
 
 service server-api {
+	@handler CreateUserHandler
+	post /user (CreateUserReq) returns (CreateUserResp)
+	
+	@handler GetUserHandler
+	get /user (GetUserReq) returns (GetUserResp)
+	
+	@handler GetUsersHandler
+	get /users returns (GetUserResp)
+	
 	@handler DeleteUserHandler
 	delete  /user (DeleteUserReq) returns (DeleteUserResp)
 }
@@ -56,8 +65,14 @@ type (
 		Password string `json:"password"` //密码
 	}
 
-	LoginResq {
+	TokenInfo {
 		Token string `json:"token"` // token
+	}
+
+	LoginResq {
+		Code    int       `json:"code"`
+		Message string    `json:"message"`
+		Data    TokenInfo `json:"data"`
 	}
 )
 

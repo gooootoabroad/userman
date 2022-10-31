@@ -1,0 +1,14 @@
+p, admin, /user, GET
+p, admin, /user, POST
+p, admin, /user, DELETE
+p, admin, /users, GET
+p, admin, /login, POST
+
+p, sysadmin, /user, GET
+p, sysadmin, /user, POST
+p, sysadmin, /user, DELETE
+p, sysadmin, /users, GET
+p, sysadmin, /login, POST
+
+p, security, /login, POST
+
