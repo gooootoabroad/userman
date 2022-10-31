@@ -51,7 +51,7 @@ func CreateUser(ctx context.Context, user model.UserInfo) error {
 	username := user.Username
 	nickName := user.NickName
 	oldUser := model.UserInfo{}
-	err := global.DB.Where("Username = ?", username).First(&oldUser).Error
+	err := global.DB.Where("username = ?", username).First(&oldUser).Error
 	if oldUser.Username != "" {
 		logger.Errorf("create user failed, username %s  is already exist", oldUser.Username)
 		return model.UserExist
@@ -63,7 +63,7 @@ func CreateUser(ctx context.Context, user model.UserInfo) error {
 	}
 
 	if nickName != "" {
-		err = global.DB.Where("nick_name = ?", nickName).First(&oldUser).Error
+		err = global.DB.Where("nickname = ?", nickName).First(&oldUser).Error
 		if oldUser.NickName != "" {
 			logger.Errorf("create user failed, nick name %v is already exist", oldUser.NickName)
 			return model.UserExist
@@ -136,6 +136,18 @@ func GetUserByUUID(ctx context.Context, userUUID uuid.UUID) (*model.UserInfo, er
 	}
 
 	return &user, nil
+}
+
+func GetAllUsers(ctx context.Context) ([]model.UserInfo, error) {
+	logger := logx.WithContext(ctx)
+	users := []model.UserInfo{}
+	err := global.DB.Find(&users).Error
+	if err != nil {
+		logger.Errorf("get users info failed, err: %v", err)
+		return nil, fmt.Errorf("internal error")
+	}
+
+	return users, nil
 }
 
 func DeleteUser(ctx context.Context, username string, userUUID uuid.UUID) error {

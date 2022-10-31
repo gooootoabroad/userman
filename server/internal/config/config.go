@@ -3,16 +3,17 @@ package config
 import (
 	"userman/server/initialize"
 
+	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"
 )
 
-var c = &Config{}
+var c = Config{}
 
 type Config struct {
 	rest.RestConf
 	initialize.PGSQL
 	RSA
-	WhiteList WhiteList
+	WhiteList WhiteURL
 }
 
 type RSA struct {
@@ -20,10 +21,15 @@ type RSA struct {
 	PrivateKeyFile string `json:""`
 }
 
-type WhiteList struct {
+type WhiteURL struct {
 	URL []string
 }
 
-func GetConfig() *Config {
+func InitWithFatal(path string) Config {
+	conf.MustLoad(path, &c)
+	return c
+}
+
+func Get() Config {
 	return c
 }

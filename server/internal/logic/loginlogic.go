@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/sha256"
 	"fmt"
+	"net/http"
 	"strings"
 
 	"userman/server/internal/svc"
@@ -68,7 +69,11 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResq, err erro
 	}
 
 	resp = &types.LoginResq{
-		Token: *token,
+		Code:    http.StatusOK,
+		Message: "",
+		Data: types.TokenInfo{
+			Token: *token,
+		},
 	}
 
 	return resp, nil

@@ -7,4 +7,5 @@ PublicKeyFile: "etc/public.key"
 PrivateKeyFile: "etc/private.key"
 
 WhiteList:
-  - URL: "login"
+  URL:
+  - /login

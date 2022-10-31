@@ -3,10 +3,11 @@ package handler
 import (
 	"net/http"
 
-	"github.com/zeromicro/go-zero/rest/httpx"
 	"userman/server/internal/logic"
 	"userman/server/internal/svc"
 	"userman/server/internal/types"
+
+	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 func DeleteUserHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {

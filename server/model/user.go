@@ -9,15 +9,15 @@ import (
 	"gorm.io/gorm"
 )
 
-const tableName = "users"
+const userTableName = "users"
 
 type Role uint
 
 var (
-	undefined Role = 0
-	admin     Role = 1
-	sysadmin  Role = 2
-	security  Role = 3
+	Undefined Role = 0
+	Admin     Role = 1
+	Sysadmin  Role = 2
+	Security  Role = 3
 )
 
 // 拼接密码所用的分隔符
@@ -32,29 +32,29 @@ var (
 // UserInfo 用户信息结构体
 type UserInfo struct {
 	gorm.Model
-	UUID     uuid.UUID  `json:"uuid"`               // 用户uuid
-	Username string     `json:"username"`           // 用户名
-	NickName string     `json:"nickName,omitempty"` // 用户别名
-	Password string     `json:"password"`           // 密码
-	Roles    Role       `json:"rolse"`              // 用户角色列表
-	LockAt   *time.Time `json:"lockat,omitempty"`   // 用户锁定时间
+	UUID     uuid.UUID  `gorm:"column:uuid"`     // 用户uuid
+	Username string     `gorm:"column:username"` // 用户名
+	NickName string     `gorm:"column:nickname"` // 用户别名
+	Password string     `gorm:"column:password"` // 密码
+	Roles    Role       `gorm:"column:rolse"`    // 用户角色列表
+	LockAt   *time.Time `gorm:"column:lockat"`   // 用户锁定时间
 }
 
 // 数据库表名
 func (u UserInfo) TableName() string {
-	return tableName
+	return userTableName
 }
 
 func (r Role) String() (string, error) {
-	if r == admin {
+	if r == Admin {
 		return "admin", nil
 	}
 
-	if r == sysadmin {
+	if r == Sysadmin {
 		return "sysadmin", nil
 	}
 
-	if r == security {
+	if r == Security {
 		return "security", nil
 	}
 
@@ -63,16 +63,16 @@ func (r Role) String() (string, error) {
 
 func (r Role) ToRole(role string) (Role, error) {
 	if role == "admin" {
-		return admin, nil
+		return Admin, nil
 	}
 
 	if role == "sysadmin" {
-		return sysadmin, nil
+		return Sysadmin, nil
 	}
 
 	if role == "security" {
-		return security, nil
+		return Security, nil
 	}
 
-	return undefined, fmt.Errorf("undefined Role")
+	return Undefined, fmt.Errorf("undefined Role")
 }

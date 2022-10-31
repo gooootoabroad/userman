@@ -9,7 +9,9 @@ type CreateUserReq struct {
 }
 
 type CreateUserResp struct {
+	Code    int    `json:"code"`
 	Message string `json:"message"`
+	Data    string `json:"data"`
 }
 
 type GetUserReq struct {
@@ -17,14 +19,20 @@ type GetUserReq struct {
 	UUID     string `json:"uuid,optional"`     // 用户uuid
 }
 
-type GetUserResp struct {
+type UserInfo struct {
 	UUID      string `json:"uuid"`              // 用户uuid
 	Username  string `json:"username"`          // 用户名
 	NickName  string `json:"nickname,optional"` // 用户别名
 	Roles     string `json:"rolse"`             // 用户角色列表
 	LockAt    string `json:"lockat,optional"`   // 用户锁定时间
-	CreatedAt string `json:"createdAt"`
-	UpdatedAt string `json:"updatedAt"`
+	CreatedAt int64  `json:"createdAt"`
+	UpdatedAt int64  `json:"updatedAt"`
+}
+
+type GetUserResp struct {
+	Code    int        `json:"code"`
+	Message string     `json:"message"`
+	Data    []UserInfo `json:"data"`
 }
 
 type DeleteUserReq struct {
@@ -33,7 +41,9 @@ type DeleteUserReq struct {
 }
 
 type DeleteUserResp struct {
+	Code    int    `json:"code"`
 	Message string `json:"message"`
+	Data    string `json:"data"`
 }
 
 type LoginReq struct {
@@ -41,6 +51,12 @@ type LoginReq struct {
 	Password string `json:"password"` //密码
 }
 
-type LoginResq struct {
+type TokenInfo struct {
 	Token string `json:"token"` // token
+}
+
+type LoginResq struct {
+	Code    int       `json:"code"`
+	Message string    `json:"message"`
+	Data    TokenInfo `json:"data"`
 }

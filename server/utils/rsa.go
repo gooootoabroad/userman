@@ -72,7 +72,7 @@ func DecryptRSA(ctx context.Context, text string) (*string, error) {
 }
 func getPriveKey(ctx context.Context) ([]byte, error) {
 	logger := logx.WithContext(ctx)
-	config := config.GetConfig()
+	config := config.Get()
 	// 检查私钥文件存不存在
 	file, err := os.Open(config.PrivateKeyFile)
 	if err != nil {
@@ -91,7 +91,7 @@ func getPriveKey(ctx context.Context) ([]byte, error) {
 
 func getPublicKey(ctx context.Context) ([]byte, error) {
 	logger := logx.WithContext(ctx)
-	config := config.GetConfig()
+	config := config.Get()
 	// 检查私钥文件存不存在
 	logger.Infof("file %s", config.PublicKeyFile)
 	file, err := os.Open(config.PublicKeyFile)

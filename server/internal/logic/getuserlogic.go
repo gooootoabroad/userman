@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"fmt"
+	"net/http"
 
 	"userman/server/internal/svc"
 	"userman/server/internal/types"
@@ -71,14 +72,22 @@ func (l *GetUserLogic) GetUser(req *types.GetUserReq) (resp *types.GetUserResp, 
 		lockAt = user.LockAt.String()
 	}
 
-	resp = &types.GetUserResp{
+	userInfo := types.UserInfo{
 		UUID:      user.UUID.String(),
 		Username:  user.Username,
 		NickName:  user.NickName,
 		Roles:     role,
 		LockAt:    lockAt,
-		CreatedAt: user.CreatedAt.String(),
-		UpdatedAt: user.UpdatedAt.String(),
+		CreatedAt: user.CreatedAt.Unix(),
+		UpdatedAt: user.UpdatedAt.Unix(),
+	}
+
+	userInfoList := []types.UserInfo{}
+	userInfoList = append(userInfoList, userInfo)
+	resp = &types.GetUserResp{
+		Code:    http.StatusOK,
+		Message: "",
+		Data:    userInfoList,
 	}
 
 	return resp, nil
